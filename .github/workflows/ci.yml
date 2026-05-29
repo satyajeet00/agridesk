@@ -1,0 +1,119 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # =========================================================================
+  # Backend: JUnit + MockMvc with JaCoCo coverage report
+  # =========================================================================
+  backend-test:
+    name: Backend (mvn verify + JaCoCo)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Run mvn verify
+        working-directory: agridesk-api
+        run: mvn -B -ntp verify
+
+      - name: Compute line coverage %
+        id: coverage
+        working-directory: agridesk-api
+        run: |
+          covered=$(grep -oP 'type="LINE" missed="\d+" covered="\K\d+' target/site/jacoco/jacoco.xml | tail -1)
+          missed=$(grep -oP 'type="LINE" missed="\K\d+' target/site/jacoco/jacoco.xml | tail -1)
+          total=$((covered + missed))
+          pct=$(awk "BEGIN {printf \"%.1f\", ($covered / $total) * 100}")
+          echo "pct=$pct" >> "$GITHUB_OUTPUT"
+          echo "covered=$covered" >> "$GITHUB_OUTPUT"
+          echo "total=$total" >> "$GITHUB_OUTPUT"
+          {
+            echo "### Backend coverage"
+            echo ""
+            echo "**$pct%** ($covered / $total lines covered)"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload JaCoCo HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: agridesk-api/target/site/jacoco/
+          retention-days: 14
+
+      - name: Upload surefire reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: agridesk-api/target/surefire-reports/
+          retention-days: 7
+
+      - name: Update coverage badge gist
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && env.GIST_SECRET != ''
+        uses: schneegans/dynamic-badges-action@v1.7.0
+        env:
+          GIST_SECRET: ${{ secrets.GIST_SECRET }}
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: ${{ vars.GIST_ID }}
+          filename: coverage.json
+          label: coverage
+          message: ${{ steps.coverage.outputs.pct }}%
+          valColorRange: ${{ steps.coverage.outputs.pct }}
+          maxColorRange: 90
+          minColorRange: 50
+
+  # =========================================================================
+  # Frontend: lint + build + typecheck (catches TS errors without spinning up the stack)
+  # =========================================================================
+  frontend-build:
+    name: Frontend (lint + build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: agridesk-web/package-lock.json
+
+      - name: Install
+        working-directory: agridesk-web
+        run: npm ci
+
+      - name: Lint
+        working-directory: agridesk-web
+        run: npm run lint
+
+      - name: Build
+        working-directory: agridesk-web
+        env:
+          NEXT_PUBLIC_API_URL: http://127.0.0.1:8080
+        run: npm run build
