@@ -60,7 +60,7 @@ After `verify` succeeds:
 - JaCoCo HTML: open `target/site/jacoco/index.html`
 - JaCoCo XML (for CI): `target/site/jacoco/jacoco.xml`
 
-Latest coverage on `main`: **~88.8%** line coverage.
+Latest coverage on `main`: **~88.9%** line coverage (see the live JaCoCo badge in the root README).
 
 ### Test layout
 

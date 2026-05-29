@@ -102,11 +102,11 @@ with a tampered request body. See `docs/HLD.md` for the full system design.
   and table interaction in the frontend.
 - **PowerShell e2e** (`docs/e2e-test.ps1`) for live-stack CORS preflight
   and real-network JWT round-trip.
-- **88.8 % line coverage** on the backend (JaCoCo, latest CI run).
+- **88.9 % line coverage** on the backend (JaCoCo, latest CI run — see the live badge above).
 - All three suites are part of CI and gate merges to `main`.
 
 ```text
-Backend  : mvn -B verify                              # 75 tests, 88.8% coverage
+Backend  : mvn -B verify                              # 75 tests, 88.9% coverage
 Frontend : npm run test:ui   (in agridesk-web/)       # 24 Playwright tests
 Live HTTP: pwsh -File docs/e2e-test.ps1               # against running stack
 ```
