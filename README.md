@@ -10,7 +10,7 @@ and WhatsApp payment reminders.
 
 [![CI](https://github.com/satyajeet00/agridesk/actions/workflows/ci.yml/badge.svg)](https://github.com/satyajeet00/agridesk/actions/workflows/ci.yml)
 [![E2E](https://github.com/satyajeet00/agridesk/actions/workflows/e2e.yml/badge.svg)](https://github.com/satyajeet00/agridesk/actions/workflows/e2e.yml)
-[![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/satyajeet00/REPLACE_WITH_GIST_ID/raw/coverage.json)](https://github.com/satyajeet00/agridesk/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/satyajeet00/1515dcccd88270cd77fdf22c310f9332/raw/coverage.json)](https://github.com/satyajeet00/agridesk/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.5-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Next.js](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org)
