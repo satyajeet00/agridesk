@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: 0
+
+agridesk:
+  jwt:
+    secret: test-secret-key-do-not-use-in-production-must-be-long-enough-for-hmac-sha512-algorithm-which-is-at-least-512-bits
+    expiration-ms: 604800000
+  cors:
+    allowed-origins: http://localhost:5501,http://127.0.0.1:5501,http://localhost:3000,http://127.0.0.1:3000
+  razorpay:
+    key-id: ""
+    key-secret: ""
