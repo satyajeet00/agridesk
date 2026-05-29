@@ -23,8 +23,14 @@ public class LedgerService {
     private final CreditEntryRepository creditEntryRepository;
     private final FarmerRepository farmerRepository;
 
+    // Far-future sentinel used in lieu of null upper bound. Picked well past any
+    // realistic agri-input business horizon so it functions as "no upper limit".
+    private static final Instant FAR_FUTURE = Instant.parse("9999-12-31T23:59:59Z");
+
     public List<LedgerEntryResponse> list(Instant from, Instant to) {
-        return creditEntryRepository.findByDealer(CurrentUser.dealerId(), from, to)
+        Instant lo = (from != null) ? from : Instant.EPOCH;
+        Instant hi = (to != null) ? to : FAR_FUTURE;
+        return creditEntryRepository.findByDealer(CurrentUser.dealerId(), lo, hi)
                 .stream().map(LedgerEntryResponse::from).toList();
     }
 
