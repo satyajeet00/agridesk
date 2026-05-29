@@ -99,7 +99,7 @@ export async function apiCall(
   method: "GET" | "POST" | "PUT" | "DELETE",
   path: string,
   body?: unknown
-): Promise<{ status: number; body: any }> {
+): Promise<{ status: number; body: unknown }> {
   const ctx = await pwRequest.newContext({ baseURL: API_URL });
   const resp = await ctx.fetch(path, {
     method,
@@ -107,7 +107,7 @@ export async function apiCall(
     data: body !== undefined ? JSON.stringify(body) : undefined,
   });
   const status = resp.status();
-  let parsed: any = null;
+  let parsed: unknown = null;
   try {
     parsed = await resp.json();
   } catch {

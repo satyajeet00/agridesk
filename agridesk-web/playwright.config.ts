@@ -18,7 +18,7 @@ export default defineConfig({
   reporter: [["list"], ["html", { open: "never", outputFolder: "playwright-report" }]],
 
   use: {
-    baseURL: "http://127.0.0.1:5501",
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || "http://127.0.0.1:5501",
     headless: true,
     viewport: { width: 1366, height: 900 },
     screenshot: "only-on-failure",

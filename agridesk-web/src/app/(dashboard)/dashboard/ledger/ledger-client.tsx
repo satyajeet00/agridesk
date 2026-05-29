@@ -156,7 +156,7 @@ export function LedgerClient({ farmers, entries, totalOutstanding, onRefresh }: 
           <input placeholder="किसान खोजें..." value={search} onChange={(e) => setSearch(e.target.value)}
             className="w-full rounded-lg border border-gray-200 bg-white px-3.5 py-2.5 pl-9 text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent" />
         </div>
-        <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value as any)}
+        <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value as "all" | "credit" | "payment")}
           className="rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-600">
           <option value="all">सभी / All</option>
           <option value="credit">उधारी / Credit</option>

@@ -135,9 +135,9 @@ export function BillingClient({ bills, farmers, products, onRefresh }: { bills: 
   const total = subtotal + gstTotal;
 
   function addLine() { setLineItems([...lineItems, { productId: "", batchId: "", quantity: "", unitPrice: "" }]); }
-  function updateLine(idx: number, field: string, val: string) {
+  function updateLine(idx: number, field: keyof (typeof lineItems)[number], val: string) {
     const updated = [...lineItems];
-    (updated[idx] as any)[field] = val;
+    updated[idx] = { ...updated[idx], [field]: val };
     if (field === "productId") {
       const prod = products.find((p) => p.id === val);
       if (prod && prod.stockBatches.length > 0) {

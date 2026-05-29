@@ -123,18 +123,11 @@ jobs:
         working-directory: agridesk-web
         run: npx playwright install --with-deps chromium
 
-      - name: Run Playwright (rewrite baseURL to :3000)
+      - name: Run Playwright
         working-directory: agridesk-web
         env:
           PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
-        run: |
-          # The Playwright config defaults to :5501 (local dev). Override at runtime via env.
-          # If your config doesn't read PLAYWRIGHT_BASE_URL, this still works because all tests
-          # use relative paths via baseURL. We patch the config in CI to read the env var.
-          if ! grep -q "process.env.PLAYWRIGHT_BASE_URL" playwright.config.ts; then
-            sed -i "s|baseURL: \"http://127.0.0.1:5501\"|baseURL: process.env.PLAYWRIGHT_BASE_URL || \"http://127.0.0.1:5501\"|" playwright.config.ts
-          fi
-          npx playwright test --reporter=list,html
+        run: npx playwright test --reporter=list,html
 
       - name: Upload Playwright report
         if: always()
